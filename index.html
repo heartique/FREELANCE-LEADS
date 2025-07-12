@@ -42,31 +42,56 @@
       <textarea name="project" placeholder="Tell me what you need..." required></textarea>
       <button type="submit">Send Request</button>
     </form>
-    <p style="text-align:center;">I’ll reply within 1 hour via Email/WhatsApp</p>
+    <p style="text-align:center;">I’ll reply within 1 hour via Email/Telegram</p>
   </section>
 
   <footer>
     &copy; 2025 Brian Muthomi | Based in Kenya | Powered by Hustle
   </footer>
 
-  <!-- EmailJS Script -->
+  <!-- EmailJS + Telegram Script -->
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
   <script>
     (function() {
-      emailjs.init("duchovvU5c5Zql3tB"); // Public key
+      emailjs.init("duchovvU5c5Zql3tB"); // Your EmailJS public key
     })();
 
     document.getElementById('leadForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
+      const form = this;
+      const name = form.name.value;
+      const email = form.email.value;
+      const phone = form.phone.value;
+      const project = form.project.value;
+
+      // === EmailJS
       emailjs.sendForm('a2cznpciWX3HJbnDwbKPx', 'template_yei58yl', this)
         .then(() => {
           alert('✅ Request sent! I’ll reach out ASAP.');
           this.reset();
         }, (err) => {
-          alert('❌ Failed to send. Try again later.');
+          alert('❌ Email failed.');
           console.error('EmailJS Error:', err);
         });
+
+      // === Telegram
+      const botToken = "7952597418:AAEgE3XJGPDztcAQmb5YKYSL0MEpxvdN-uA";
+      const chatId = "7614075563";
+      const message = `📥 *New Lead!*\n\n👤 *Name:* ${name}\n📧 *Email:* ${email}\n📱 *Phone:* ${phone}\n📝 *Project:* ${project}`;
+
+      fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: message,
+          parse_mode: "Markdown"
+        })
+      })
+      .then(response => response.json())
+      .then(data => console.log("Telegram success:", data))
+      .catch(error => console.error("Telegram error:", error));
     });
   </script>
 
