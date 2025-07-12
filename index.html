@@ -49,5 +49,26 @@
     &copy; 2025 Brian Muthomi | Based in Kenya | Powered by Hustle
   </footer>
 
+  <!-- EmailJS Script -->
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
+  <script>
+    (function() {
+      emailjs.init("duchovvU5c5Zql3tB"); // Public key
+    })();
+
+    document.getElementById('leadForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      emailjs.sendForm('a2cznpciWX3HJbnDwbKPx', 'template_yei58yl', this)
+        .then(() => {
+          alert('✅ Request sent! I’ll reach out ASAP.');
+          this.reset();
+        }, (err) => {
+          alert('❌ Failed to send. Try again later.');
+          console.error('EmailJS Error:', err);
+        });
+    });
+  </script>
+
 </body>
 </html>
